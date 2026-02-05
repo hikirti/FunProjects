@@ -1,0 +1,213 @@
+[
+  {
+    "file": "sample1.html",
+    "status": "success",
+    "metadata": {
+      "encoding": "utf-8",
+      "content_zones": {
+        "main": {
+          "css": [
+            "#main"
+          ],
+          "xpath": [
+            "//div[@id='main']"
+          ]
+        },
+        "nav": {
+          "css": [],
+          "xpath": []
+        },
+        "footer": {
+          "css": [],
+          "xpath": []
+        },
+        "exclude": {
+          "css": [],
+          "xpath": []
+        }
+      },
+      "extraction_hints": {
+        "collapse_whitespace": true,
+        "include_alt_text": true,
+        "script_affected_elements": []
+      },
+      "anomalies_detected": [
+        "possible_unclosed_tags"
+      ]
+    }
+  },
+  {
+    "file": "sample2.html",
+    "status": "success",
+    "metadata": {
+      "encoding": "utf-8",
+      "content_zones": {
+        "main": {
+          "css": [
+            "body"
+          ],
+          "xpath": [
+            "//body"
+          ]
+        },
+        "nav": {
+          "css": [],
+          "xpath": []
+        },
+        "footer": {
+          "css": [],
+          "xpath": []
+        },
+        "exclude": {
+          "css": [
+            "[style*='display:none']"
+          ],
+          "xpath": [
+            "//span[@style='display:none']"
+          ]
+        }
+      },
+      "extraction_hints": {
+        "collapse_whitespace": true,
+        "include_alt_text": true,
+        "script_affected_elements": [
+          "body"
+        ]
+      },
+      "anomalies_detected": [
+        "possible_unclosed_tags",
+        "uppercase_attributes"
+      ]
+    }
+  },
+  {
+    "file": "sample3.html",
+    "status": "success",
+    "metadata": {
+      "encoding": "utf-8",
+      "content_zones": {
+        "main": {
+          "css": [
+            "body"
+          ],
+          "xpath": [
+            "//body"
+          ]
+        },
+        "nav": {
+          "css": [],
+          "xpath": []
+        },
+        "footer": {
+          "css": [],
+          "xpath": []
+        },
+        "exclude": {
+          "css": [],
+          "xpath": []
+        }
+      },
+      "extraction_hints": {
+        "collapse_whitespace": true,
+        "include_alt_text": true,
+        "script_affected_elements": []
+      },
+      "anomalies_detected": [
+        "possible_unclosed_tags"
+      ]
+    }
+  },
+  {
+    "file": "sample4.html",
+    "status": "success",
+    "metadata": {
+      "encoding": "utf-8",
+      "content_zones": {
+        "main": {
+          "css": [
+            "article",
+            ".content.body.article"
+          ],
+          "xpath": [
+            "//article",
+            "//div[contains(@class, 'content') and contains(@class, 'body') and contains(@class, 'article')]"
+          ]
+        },
+        "nav": {
+          "css": [],
+          "xpath": []
+        },
+        "footer": {
+          "css": [],
+          "xpath": []
+        },
+        "exclude": {
+          "css": [],
+          "xpath": []
+        }
+      },
+      "extraction_hints": {
+        "collapse_whitespace": true,
+        "include_alt_text": true,
+        "script_affected_elements": []
+      },
+      "anomalies_detected": [
+        "possible_unclosed_tags",
+        "orphan_closing_span",
+        "orphan_closing_footer",
+        "orphan_closing_section"
+      ]
+    }
+  },
+  {
+    "file": "sample5.html",
+    "status": "success",
+    "metadata": {
+      "encoding": "utf-8",
+      "content_zones": {
+        "main": {
+          "css": [
+            "main"
+          ],
+          "xpath": [
+            "//main"
+          ]
+        },
+        "nav": {
+          "css": [
+            "a[href='/home']"
+          ],
+          "xpath": [
+            "//a[@href='/home']"
+          ]
+        },
+        "footer": {
+          "css": [
+            "#footer"
+          ],
+          "xpath": [
+            "//div[@id='footer']"
+          ]
+        },
+        "exclude": {
+          "css": [
+            ".fake-content"
+          ],
+          "xpath": [
+            "//div[@class='fake-content']"
+          ]
+        }
+      },
+      "extraction_hints": {
+        "collapse_whitespace": true,
+        "include_alt_text": true,
+        "script_affected_elements": []
+      },
+      "anomalies_detected": [
+        "double_angle_brackets",
+        "possible_unclosed_tags",
+        "malformed_href_attribute"
+      ]
+    }
+  }
+]

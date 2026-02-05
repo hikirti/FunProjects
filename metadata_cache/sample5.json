@@ -1,0 +1,55 @@
+{
+  "cache_key": "sample5",
+  "source_name": "sample5.html",
+  "created_at": "2026-02-04T10:29:30.193775",
+  "metadata": {
+    "encoding": "utf-8",
+    "content_zones": {
+      "main": {
+        "css": [
+          "main"
+        ],
+        "xpath": [
+          "//main"
+        ]
+      },
+      "nav": {
+        "css": [],
+        "xpath": []
+      },
+      "footer": {
+        "css": [
+          "#footer"
+        ],
+        "xpath": [
+          "//div[@id='footer']"
+        ]
+      },
+      "exclude": {
+        "css": [
+          ".fake-content"
+        ],
+        "xpath": [
+          "//div[contains(@class, 'fake-content')]"
+        ]
+      }
+    },
+    "extraction_hints": {
+      "collapse_whitespace": true,
+      "include_alt_text": true
+    },
+    "anomalies_detected": [
+      "double_angle_brackets",
+      "possible_unclosed_tags",
+      "malformed_href_attribute"
+    ]
+  },
+  "extra_info": {
+    "anomalies": [
+      "double_angle_brackets",
+      "possible_unclosed_tags",
+      "malformed_href_attribute"
+    ],
+    "encoding": "utf-8"
+  }
+}

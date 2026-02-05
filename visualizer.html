@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Parser Results Visualizer</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #eef1f5;
+            padding: 24px;
+            color: #1a1a2e;
+            line-height: 1.5;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 6px;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* ── Upload ── */
+        .upload-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding: 14px 20px;
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+        }
+
+        .upload-bar input[type="file"] {
+            font-size: 13px;
+        }
+
+        .upload-bar button {
+            padding: 7px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #fff;
+            background: #4f46e5;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+        .upload-bar button:hover {
+            background: #4338ca;
+        }
+
+        /* ── Legend ── */
+        .legend {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-swatch {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            flex-shrink: 0;
+        }
+
+        .legend-swatch.sw-text    { background: #f0fdf4; border: 1px solid #86efac; }
+        .legend-swatch.sw-raw     { background: #fffbeb; border: 1px solid #fcd34d; }
+        .legend-swatch.sw-diff    { background: #fef2f2; border: 1px solid #fca5a5; }
+        .legend-swatch.sw-link    { background: #eff6ff; border: 1px solid #93c5fd; }
+        .legend-swatch.sw-script  { background: #faf5ff; border: 1px solid #c4b5fd; }
+
+        /* ── File Card ── */
+        .file-card {
+            background: #fff;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        .file-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            background: #1e293b;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .file-card-header:hover {
+            background: #334155;
+        }
+
+        .file-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .file-card-title .chevron {
+            font-size: 12px;
+            transition: transform .2s;
+        }
+
+        .file-card.collapsed .chevron {
+            transform: rotate(-90deg);
+        }
+
+        .file-card.collapsed .file-card-body {
+            display: none;
+        }
+
+        .file-card-meta {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 20px;
+            letter-spacing: .3px;
+        }
+
+        .pill-success { background: #22c55e; color: #fff; }
+        .pill-error   { background: #ef4444; color: #fff; }
+        .pill-count   { background: rgba(255,255,255,.15); color: #e2e8f0; }
+
+        .file-card-body {
+            padding: 0;
+        }
+
+        /* ── Block ── */
+        .block-row {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .block-row:last-child {
+            border-bottom: none;
+        }
+
+        .block-index {
+            width: 48px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #9ca3af;
+            background: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .block-gutter {
+            width: 5px;
+            flex-shrink: 0;
+        }
+
+        /* Tag-specific gutter colors */
+        .gutter-p          { background: #3b82f6; }
+        .gutter-h1         { background: #ef4444; }
+        .gutter-h2         { background: #f97316; }
+        .gutter-h3         { background: #eab308; }
+        .gutter-h4         { background: #a3e635; }
+        .gutter-h5         { background: #14b8a6; }
+        .gutter-h6         { background: #0891b2; }
+        .gutter-li         { background: #22c55e; }
+        .gutter-a          { background: #8b5cf6; }
+        .gutter-td,
+        .gutter-th         { background: #64748b; }
+        .gutter-blockquote { background: #78716c; }
+        .gutter-script     { background: #a855f7; }
+        .gutter-default    { background: #94a3b8; }
+
+        .block-content {
+            flex: 1;
+            padding: 18px 24px;
+            min-width: 0;
+        }
+
+        .block-top-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .tag-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .tag-chip.chip-p          { background: #3b82f6; }
+        .tag-chip.chip-h1         { background: #ef4444; }
+        .tag-chip.chip-h2         { background: #f97316; }
+        .tag-chip.chip-h3         { background: #eab308; color: #1a1a2e; }
+        .tag-chip.chip-h4         { background: #a3e635; color: #1a1a2e; }
+        .tag-chip.chip-h5         { background: #14b8a6; }
+        .tag-chip.chip-h6         { background: #0891b2; }
+        .tag-chip.chip-li         { background: #22c55e; }
+        .tag-chip.chip-a          { background: #8b5cf6; }
+        .tag-chip.chip-td,
+        .tag-chip.chip-th         { background: #64748b; }
+        .tag-chip.chip-blockquote { background: #78716c; }
+        .tag-chip.chip-script     { background: #7c3aed; }
+        .tag-chip.chip-default    { background: #94a3b8; }
+
+        .script-label {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: #f3e8ff;
+            color: #7c3aed;
+            font-weight: 600;
+            letter-spacing: .3px;
+            text-transform: uppercase;
+        }
+
+        .diff-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ef4444;
+            flex-shrink: 0;
+        }
+
+        /* ── Fields inside a block ── */
+        .fields-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .field-label {
+            width: 80px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: #6b7280;
+            background: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .field-val {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+            word-break: break-word;
+            min-width: 0;
+        }
+
+        .field-val.fv-text {
+            background: #f0fdf4;
+        }
+
+        .field-val.fv-raw {
+            background: #fffbeb;
+        }
+
+        .field-val.fv-raw-diff {
+            background: #fef2f2;
+        }
+
+        .field-val.fv-empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        /* ── Links sub-section ── */
+        .links-section {
+            margin-top: 10px;
+        }
+
+        .links-heading {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            color: #6b7280;
+            margin-bottom: 6px;
+            padding-left: 2px;
+        }
+
+        .link-card {
+            display: flex;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 6px;
+            background: #eff6ff;
+        }
+
+        .link-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .link-card-icon {
+            width: 36px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #dbeafe;
+            border-right: 1px solid #bfdbfe;
+            color: #3b82f6;
+            font-size: 13px;
+        }
+
+        .link-card-body {
+            flex: 1;
+            padding: 8px 12px;
+            min-width: 0;
+        }
+
+        .link-href-val {
+            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-size: 12px;
+            color: #1d4ed8;
+            word-break: break-all;
+            margin-bottom: 4px;
+        }
+
+        .link-detail {
+            display: flex;
+            gap: 0;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+            font-size: 12px;
+        }
+
+        .link-detail-label {
+            width: 42px;
+            flex-shrink: 0;
+            padding: 4px 6px;
+            background: #f1f5f9;
+            border-right: 1px solid #e5e7eb;
+            font-weight: 600;
+            color: #6b7280;
+            font-size: 10px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+        }
+
+        .link-detail-val {
+            flex: 1;
+            padding: 4px 8px;
+            word-break: break-word;
+        }
+
+        .link-detail-val.ld-text {
+            background: #f0fdf4;
+        }
+
+        .link-detail-val.ld-raw {
+            background: #fffbeb;
+        }
+
+        .link-detail-val.ld-raw-diff {
+            background: #fef2f2;
+        }
+
+        .link-detail-val.ld-empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        /* ── Warnings ── */
+        .warnings-box {
+            margin: 16px 24px 20px 24px;
+            padding: 12px 16px;
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+        }
+
+        .warnings-box-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 4px;
+        }
+
+        .warnings-box ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 13px;
+            color: #78350f;
+        }
+
+        .warnings-box li {
+            margin-bottom: 2px;
+        }
+
+        /* ── Error state ── */
+        .error-box {
+            margin: 20px 24px;
+            padding: 14px 18px;
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            border-radius: 8px;
+            color: #991b1b;
+            font-size: 14px;
+        }
+
+        /* ── Empty state ── */
+        .no-data {
+            text-align: center;
+            padding: 48px 20px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .no-blocks {
+            text-align: center;
+            padding: 32px 20px;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="page-header">
+        <h1>HTML Parser Results Visualizer</h1>
+        <p>Structured content blocks extracted from HTML files</p>
+    </div>
+
+    <div class="upload-bar">
+        <input type="file" id="fileInput" accept=".json">
+        <button onclick="loadSampleData()">Load results.json</button>
+    </div>
+
+    <div class="legend">
+        <div class="legend-item"><div class="legend-swatch sw-text"></div>  text (cleaned)</div>
+        <div class="legend-item"><div class="legend-swatch sw-raw"></div>   raw (original)</div>
+        <div class="legend-item"><div class="legend-swatch sw-diff"></div>  raw differs</div>
+        <div class="legend-item"><div class="legend-swatch sw-link"></div>  link</div>
+        <div class="legend-item"><div class="legend-swatch sw-script"></div> script-generated</div>
+    </div>
+
+    <div id="results" class="no-data">
+        No data loaded. Upload a results.json file or click "Load results.json".
+    </div>
+
+    <script>
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    renderResults(JSON.parse(e.target.result));
+                } catch (err) {
+                    alert('Error parsing JSON: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        function loadSampleData() {
+            fetch('results.json')
+                .then(r => r.json())
+                .then(data => renderResults(data))
+                .catch(err => alert('Could not load results.json: ' + err.message));
+        }
+
+        function esc(text) {
+            if (!text) return '';
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        /* Resolve tag to a CSS-safe class suffix */
+        function tagClass(tag) {
+            if (tag.startsWith('script:')) return 'script';
+            const known = ['p','h1','h2','h3','h4','h5','h6','li','a','td','th','blockquote'];
+            return known.includes(tag) ? tag : 'default';
+        }
+
+        function renderResults(data) {
+            const container = document.getElementById('results');
+            if (!Array.isArray(data) || data.length === 0) {
+                container.innerHTML = '<div class="no-data">No results found.</div>';
+                return;
+            }
+
+            let html = '';
+
+            for (const file of data) {
+                const blocks = file.blocks || [];
+                const blockCount = blocks.length;
+                const linkCount = blocks.reduce((s, b) => s + (b.links?.length || 0), 0);
+                const scriptCount = blocks.filter(b => b.tag?.startsWith('script:')).length;
+
+                html += `<div class="file-card" id="file-${esc(file.file)}">`;
+
+                /* ── Header ── */
+                html += `
+                    <div class="file-card-header" onclick="this.parentElement.classList.toggle('collapsed')">
+                        <div class="file-card-title">
+                            <span class="chevron">&#9660;</span>
+                            ${esc(file.file)}
+                        </div>
+                        <div class="file-card-meta">
+                            <span class="pill pill-count">${blockCount} blocks</span>
+                            <span class="pill pill-count">${linkCount} links</span>
+                            ${scriptCount ? `<span class="pill pill-count">${scriptCount} script</span>` : ''}
+                            <span class="pill pill-${file.status}">${file.status}</span>
+                        </div>
+                    </div>
+                `;
+
+                html += '<div class="file-card-body">';
+
+                if (file.status === 'error') {
+                    html += `<div class="error-box">${esc(file.error)}</div>`;
+                } else if (blockCount > 0) {
+
+                    for (let i = 0; i < blocks.length; i++) {
+                        const block = blocks[i];
+                        const isScript = block.tag.startsWith('script:');
+                        const baseTag = isScript ? block.tag.slice(7) : block.tag;
+                        const tc = tagClass(block.tag);
+                        const isDiff = block.raw && block.text !== block.raw;
+
+                        html += `
+                            <div class="block-row">
+                                <div class="block-index">${i + 1}</div>
+                                <div class="block-gutter gutter-${tc}"></div>
+                                <div class="block-content">
+
+                                    <div class="block-top-bar">
+                                        <span class="tag-chip chip-${tc}">&lt;${esc(block.tag)}&gt;</span>
+                                        ${isScript ? '<span class="script-label">document.write</span>' : ''}
+                                        ${isDiff ? '<span class="diff-dot" title="raw differs from text"></span>' : ''}
+                                    </div>
+
+                                    <div class="fields-grid">
+                        `;
+
+                        /* text field */
+                        html += `
+                            <div class="field-row">
+                                <div class="field-label">Text</div>
+                                <div class="field-val fv-text ${block.text ? '' : 'fv-empty'}">
+                                    ${block.text ? esc(block.text) : '(empty)'}
+                                </div>
+                            </div>
+                        `;
+
+                        /* raw field — only when it exists */
+                        if (block.raw !== undefined) {
+                            const rc = isDiff ? 'fv-raw-diff' : 'fv-raw';
+                            html += `
+                                <div class="field-row">
+                                    <div class="field-label">Raw</div>
+                                    <div class="field-val ${rc} ${block.raw ? '' : 'fv-empty'}">
+                                        ${block.raw ? esc(block.raw) : '(empty)'}
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        html += '</div>'; /* fields-grid */
+
+                        /* ── Links ── */
+                        if (block.links && block.links.length > 0) {
+                            html += `
+                                <div class="links-section">
+                                    <div class="links-heading">Links (${block.links.length})</div>
+                            `;
+
+                            for (const link of block.links) {
+                                const ld = link.raw && link.text !== link.raw;
+                                html += `
+                                    <div class="link-card">
+                                        <div class="link-card-icon">&rarr;</div>
+                                        <div class="link-card-body">
+                                            <div class="link-href-val">${esc(link.href)}</div>
+                                            <div class="link-detail">
+                                                <div class="link-detail-label">text</div>
+                                                <div class="link-detail-val ld-text ${link.text ? '' : 'ld-empty'}">
+                                                    ${link.text ? esc(link.text) : '(empty)'}
+                                                </div>
+                                            </div>
+                                `;
+
+                                if (link.raw !== undefined) {
+                                    const lrc = ld ? 'ld-raw-diff' : 'ld-raw';
+                                    html += `
+                                            <div class="link-detail">
+                                                <div class="link-detail-label">raw</div>
+                                                <div class="link-detail-val ${lrc} ${link.raw ? '' : 'ld-empty'}">
+                                                    ${link.raw ? esc(link.raw) : '(empty)'}
+                                                </div>
+                                            </div>
+                                    `;
+                                }
+
+                                html += '</div></div>'; /* link-card-body, link-card */
+                            }
+
+                            html += '</div>'; /* links-section */
+                        }
+
+                        html += '</div></div>'; /* block-content, block-row */
+                    }
+
+                    /* Warnings */
+                    if (file.warnings && file.warnings.length > 0) {
+                        html += `
+                            <div class="warnings-box">
+                                <div class="warnings-box-title">Warnings</div>
+                                <ul>${file.warnings.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
+                            </div>
+                        `;
+                    }
+
+                } else {
+                    html += '<div class="no-blocks">No blocks extracted</div>';
+                }
+
+                html += '</div></div>'; /* file-card-body, file-card */
+            }
+
+            container.innerHTML = html;
+            container.classList.remove('no-data');
+        }
+
+        /* Auto-load on page open */
+        window.onload = function() {
+            fetch('results.json')
+                .then(r => r.json())
+                .then(data => renderResults(data))
+                .catch(() => {});
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "cache_key": "sample4",
+  "source_name": "sample4.html",
+  "created_at": "2026-02-04T10:29:27.841819",
+  "metadata": {
+    "encoding": "utf-8",
+    "content_zones": {
+      "main": {
+        "css": [
+          "article",
+          ".content.body.article"
+        ],
+        "xpath": [
+          "//article",
+          "//*[@class='content body article']"
+        ]
+      },
+      "nav": {
+        "css": [],
+        "xpath": []
+      },
+      "footer": {
+        "css": [],
+        "xpath": []
+      },
+      "exclude": {
+        "css": [],
+        "xpath": []
+      }
+    },
+    "extraction_hints": {
+      "collapse_whitespace": true,
+      "include_alt_text": true
+    },
+    "anomalies_detected": [
+      "possible_unclosed_tags"
+    ]
+  },
+  "extra_info": {
+    "anomalies": [
+      "possible_unclosed_tags",
+      "orphan_closing_span",
+      "orphan_closing_footer",
+      "orphan_closing_section"
+    ],
+    "encoding": "utf-8"
+  }
+}

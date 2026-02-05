@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>Sample 5</title>
+  <style>
+     .fake-content:after {
+       content: "This should not be extracted as text";
+     }
+  </style>
+</head>
+
+<body>
+  <div class="fake-content"></div>
+
+  <main>
+    <h1>Welcome</h1>
+
+    <a href=="/home">Home</a>
+
+    <<p>>This <b>is</i> messy <<<< /p>
+
+    <ul>
+      <li>Item 1
+      <li>Item 2
+      <li><a href="/item3">Item 3 Link</a>
+    </ul>
+
+    <div id="footer">
+      Footer text starts here

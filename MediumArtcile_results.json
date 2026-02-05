@@ -1,0 +1,1190 @@
+[
+  {
+    "file": "MediumArtcile.html",
+    "status": "success",
+    "blocks": [
+      {
+        "tag": "p",
+        "text": "--",
+        "raw": "--",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Listen",
+        "raw": "Listen",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Share",
+        "raw": "Share",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "This essay was originally published on my , where I write about principles of human–AI interaction.",
+        "raw": "This essay was originally published on my , where I write about principles of human–AI interaction.",
+        "links": [
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "text": "For years, application design followed a straightforward goal: reduce friction so users can complete their jobs faster. We mapped flows, removed steps, and optimized interactions — assuming the user would remain the primary actor.",
+        "raw": "For years, application design followed a straightforward goal: reduce friction so users can complete their jobs faster. We mapped flows, removed steps, and optimized interactions — assuming the user would remain the primary actor.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "AI changes that assumption.",
+        "raw": "AI changes that assumption.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Today, we find ourselves in a dangerous “messy middle.” We are building software that can act, decide, and synthesize, yet we are still designing it as if it were a simple tool. If we want to build products people actually love, we have to stop “sprinkling” AI onto our workflows. We have to answer one fundamental question:",
+        "raw": "Today, we find ourselves in a dangerous “messy middle.” We are building software that can act, decide, and synthesize, yet we are still designing it as if it were a simple tool. If we want to build products people actually love, we have to stop “sprinkling” AI onto our workflows. We have to answer one fundamental question:",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Who holds the steering wheel at this specific moment, and what is the logic that justifies it?",
+        "raw": "Who holds the steering wheel at this specific moment, and what is the logic that justifies it?",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "We need a systematic way to move beyond “assistance everywhere.” We need to know when to step back and let the machine take the wheel entirely, and when to protect the human’s role as the accountable driver.",
+        "raw": "We need a systematic way to move beyond “assistance everywhere.” We need to know when to step back and let the machine take the wheel entirely, and when to protect the human’s role as the accountable driver.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "This article provides a practical framework that turns the “who does what” decision into a repeatable process.",
+        "raw": "This article provides a practical framework that turns the “who does what” decision into a repeatable process.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Every task maps to one of three modes. Each defines who acts, who decides, and what the interface must enforce.",
+        "raw": "Every task maps to one of three modes. Each defines who acts, who decides, and what the interface must enforce.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "The human retains full control. AI’s role is to surface evidence, highlight tradeoffs, and structure the decision — but never to act. The human reads, weighs, chooses, and executes.",
+        "raw": "The human retains full control. AI’s role is to surface evidence, highlight tradeoffs, and structure the decision — but never to act. The human reads, weighs, chooses, and executes.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Design goal: Improve decision quality and accountability by giving the human clear evidence, tradeoffs, and structured rationale support.",
+        "raw": "Design goal: Improve decision quality and accountability by giving the human clear evidence, tradeoffs, and structured rationale support.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "When to use it: High-stakes decisions requiring subjective judgment, empathy, or ethical nuance, or where the process itself creates value.",
+        "raw": "When to use it: High-stakes decisions requiring subjective judgment, empathy, or ethical nuance, or where the process itself creates value.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Common UX patterns",
+        "raw": "Common UX patterns",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "AI does the heavy lifting — generating drafts, running calculations, scanning documents — but cannot commit consequential actions without explicit human approval. The human reviews, edits, and signs off.",
+        "raw": "AI does the heavy lifting — generating drafts, running calculations, scanning documents — but cannot commit consequential actions without explicit human approval. The human reviews, edits, and signs off.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Design goal: Maximize speed and iteration while ensuring safe commitment through previews, diffs, and explicit human approval at key points.",
+        "raw": "Design goal: Maximize speed and iteration while ensuring safe commitment through previews, diffs, and explicit human approval at key points.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "When to use it: High-variability tasks with medium-to-high stakes where errors are costly or hard to detect, and accountability must remain with a human",
+        "raw": "When to use it: High-variability tasks with medium-to-high stakes where errors are costly or hard to detect, and accountability must remain with a human",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Common UX patterns",
+        "raw": "Common UX patterns",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "AI owns the task. It acts autonomously within defined boundaries. Humans don’t approve individual actions — they set constraints upfront and review outcomes after the fact.",
+        "raw": "AI owns the task. It acts autonomously within defined boundaries. Humans don’t approve individual actions — they set constraints upfront and review outcomes after the fact.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Design goal: Run on autopilot with guardrails — minimize user involvement while keeping traceability, monitoring, and rollback when needed.",
+        "raw": "Design goal: Run on autopilot with guardrails — minimize user involvement while keeping traceability, monitoring, and rollback when needed.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "When to use it: High-volume, low-stakes, predictable tasks with clear success criteria and easily detectable errors — where human review adds friction without adding value (e.g., data entry, spam filtering, meeting scheduling).",
+        "raw": "When to use it: High-volume, low-stakes, predictable tasks with clear success criteria and easily detectable errors — where human review adds friction without adding value (e.g., data entry, spam filtering, meeting scheduling).",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Join Medium for free to get updates from this writer.",
+        "raw": "Join Medium for free to get updates from this writer.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Common UX patterns",
+        "raw": "Common UX patterns",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Knowing the three modes isn’t enough. You need a systematic way to decide which mode fits which task. These variables determine whether a machine should act and whether it is worth the investment to make it do so.",
+        "raw": "Knowing the three modes isn’t enough. You need a systematic way to decide which mode fits which task. These variables determine whether a machine should act and whether it is worth the investment to make it do so.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "This measures risk and controllability. High score = safer to automate.",
+        "raw": "This measures risk and controllability. High score = safer to automate.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "This measures value and feasibility. High score = strong payoff for building automation.",
+        "raw": "This measures value and feasibility. High score = strong payoff for building automation.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "To move from raw scores to a functional product strategy, the framework uses a four-quadrant matrix to determine the optimal relationship between the user and the machine. By plotting Automation ROI on the X-axis against Automation Suitability on the Y-axis, you can categorize any workflow into one of four distinct strategic buckets.",
+        "raw": "To move from raw scores to a functional product strategy, the framework uses a four-quadrant matrix to determine the optimal relationship between the user and the machine. By plotting Automation ROI on the X-axis against Automation Suitability on the Y-axis, you can categorize any workflow into one of four distinct strategic buckets.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Here’s an example: interview scheduling coordination. It’s frequent and time-consuming (high ROI), it’s mostly rules-based, low stakes, and easy to undo (high suitability). When we score it, it lands in the top-right quadrant — Delegate — which means the product should run it end-to-end within constraints, and only pull a human in for exceptions.",
+        "raw": "Here’s an example: interview scheduling coordination. It’s frequent and time-consuming (high ROI), it’s mostly rules-based, low stakes, and easy to undo (high suitability). When we score it, it lands in the top-right quadrant — Delegate — which means the product should run it end-to-end within constraints, and only pull a human in for exceptions.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "After scoring dozens of workflows, clear patterns emerge in how tasks cluster:",
+        "raw": "After scoring dozens of workflows, clear patterns emerge in how tasks cluster:",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "(Human-Led): Anything involving ethics, legal commitments, personnel decisions, strategic direction, or crisis response. These tasks require judgment that can’t be delegated — not because AI isn’t capable, but because accountability must remain with humans.",
+        "raw": "(Human-Led): Anything involving ethics, legal commitments, personnel decisions, strategic direction, or crisis response. These tasks require judgment that can’t be delegated — not because AI isn’t capable, but because accountability must remain with humans.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "(Assist): Content generation, insight detection, triage, and any task where AI can produce a strong first draft but the final call requires human review. Payment approvals and moderation decisions sit here too — AI flags and suggests, humans commit.",
+        "raw": "(Assist): Content generation, insight detection, triage, and any task where AI can produce a strong first draft but the final call requires human review. Payment approvals and moderation decisions sit here too — AI flags and suggests, humans commit.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "(Delegate): Data operations dominate this range. ETL jobs, categorization, normalization, spam filtering, scheduling, notification routing. High volume, structured inputs, clear rules, easy rollback.",
+        "raw": "(Delegate): Data operations dominate this range. ETL jobs, categorization, normalization, spam filtering, scheduling, notification routing. High volume, structured inputs, clear rules, easy rollback.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "The scoring isn’t meant to be precise — it’s meant to force the conversation. When your team debates whether “content moderation” is a 4 or a 6, you’re having the right discussion about what level of human oversight that task actually needs.",
+        "raw": "The scoring isn’t meant to be precise — it’s meant to force the conversation. When your team debates whether “content moderation” is a 4 or a 6, you’re having the right discussion about what level of human oversight that task actually needs.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "The delegation matrix doesn’t tell you where to “add AI.” It tells you what form of control to design — autopilot, copilot, helper, or advisor.",
+        "raw": "The delegation matrix doesn’t tell you where to “add AI.” It tells you what form of control to design — autopilot, copilot, helper, or advisor.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Every task requires a specific answer to the question: “Who holds the steering wheel here?”",
+        "raw": "Every task requires a specific answer to the question: “Who holds the steering wheel here?”",
+        "links": []
+      },
+      {
+        "tag": "h1",
+        "text": "The AI delegation matrix: what parts of your UI shouldn’t exist?",
+        "raw": "The AI delegation matrix: what parts of your UI shouldn’t exist?",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "A practical scoring model to decide when to Delegate, Assist, or stay Human-Led.",
+        "raw": "A practical scoring model to decide when to Delegate, Assist, or stay Human-Led.",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "The Three Control Modes",
+        "raw": "The Three Control Modes",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "1) Human-Led",
+        "raw": "1) Human-Led",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "2) Assist",
+        "raw": "2) Assist",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "3) Delegate",
+        "raw": "3) Delegate",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "Get Taras Bakusevych’s stories in your inbox",
+        "raw": "Get Taras Bakusevych’s stories in your inbox",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "The Scoring Model",
+        "raw": "The Scoring Model",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "Dimension 1: Automation Suitability (S_SUIT)",
+        "raw": "Dimension 1: Automation Suitability (S_SUIT)",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "Dimension 2: Automation ROI (S_ROI)",
+        "raw": "Dimension 2: Automation ROI (S_ROI)",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "Mapping Scores to Control Modes",
+        "raw": "Mapping Scores to Control Modes",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "The Cheatsheet",
+        "raw": "The Cheatsheet",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "Apply the framework in 6 steps",
+        "raw": "Apply the framework in 6 steps",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Evidence packs (relevant facts, sources, prior cases, policies)",
+        "raw": "Evidence packs (relevant facts, sources, prior cases, policies)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Tradeoff framing (pros/cons, risks, alternatives)",
+        "raw": "Tradeoff framing (pros/cons, risks, alternatives)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Structured decision templates (criteria + rationale capture)",
+        "raw": "Structured decision templates (criteria + rationale capture)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "“Second opinion” critique (counterarguments, failure modes)",
+        "raw": "“Second opinion” critique (counterarguments, failure modes)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Clear accountability cues (what is suggestion vs decision)",
+        "raw": "Clear accountability cues (what is suggestion vs decision)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Draft-first flows (generate → edit → approve)",
+        "raw": "Draft-first flows (generate → edit → approve)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Plan-before-execute (“here’s what I will do”)",
+        "raw": "Plan-before-execute (“here’s what I will do”)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Diff-based review (show changes, not just final output)",
+        "raw": "Diff-based review (show changes, not just final output)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Provenance panels (inputs, sources, constraints used)",
+        "raw": "Provenance panels (inputs, sources, constraints used)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Uncertainty and “why” explanations (when/why the system is unsure)",
+        "raw": "Uncertainty and “why” explanations (when/why the system is unsure)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Tight correction loops (edit a section, regenerate locally)",
+        "raw": "Tight correction loops (edit a section, regenerate locally)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Clear commit controls (approve/apply with scope visibility)",
+        "raw": "Clear commit controls (approve/apply with scope visibility)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Global constraints (allowlists, budgets, scopes, time windows)",
+        "raw": "Global constraints (allowlists, budgets, scopes, time windows)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Activity logs / timelines (what happened, when, and under which policy)",
+        "raw": "Activity logs / timelines (what happened, when, and under which policy)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Monitoring by exception (alerts only on anomalies)",
+        "raw": "Monitoring by exception (alerts only on anomalies)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Rollback/undo where feasible (or compensating actions)",
+        "raw": "Rollback/undo where feasible (or compensating actions)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Audit views (sampling, QA workflows, policy compliance)",
+        "raw": "Audit views (sampling, QA workflows, policy compliance)",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Reversibility: Can the action be undone? High reversibility allows for deeper delegation.",
+        "raw": "Reversibility: Can the action be undone? High reversibility allows for deeper delegation.",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Safety / Risk: What is the “blast radius” of a failure? Catastrophic risks require human-led guardrails.",
+        "raw": "Safety / Risk: What is the “blast radius” of a failure? Catastrophic risks require human-led guardrails.",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Logic Type: Is the task governed by objective rules (deterministic) or subjective “vibes” (probabilistic)?",
+        "raw": "Logic Type: Is the task governed by objective rules (deterministic) or subjective “vibes” (probabilistic)?",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Frequency: Is this a rare occurrence or a constant, high-volume workflow?",
+        "raw": "Frequency: Is this a rare occurrence or a constant, high-volume workflow?",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Data Readiness: Is the necessary information messy and unstructured, or accessible via a structured API?",
+        "raw": "Data Readiness: Is the necessary information messy and unstructured, or accessible via a structured API?",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "AI Proficiency: Does the current model’s capability show experimental results or consistent mastery of the task?",
+        "raw": "AI Proficiency: Does the current model’s capability show experimental results or consistent mastery of the task?",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Delegate (High ROI / High Suitability): The AI executes end-to-end within constraints while humans move to an auditor role. The goal is work removal through invisible execution and background guardrails.",
+        "raw": "Delegate (High ROI / High Suitability): The AI executes end-to-end within constraints while humans move to an auditor role. The goal is work removal through invisible execution and background guardrails.",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Assist (High ROI / Low Suitability): High-leverage tasks that are too risky for full autonomy. The AI drafts in steps, requiring a “human handshake” via previews and explicit approval at critical commits.",
+        "raw": "Assist (High ROI / Low Suitability): High-leverage tasks that are too risky for full autonomy. The AI drafts in steps, requiring a “human handshake” via previews and explicit approval at critical commits.",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Human-Led (Low ROI / Low Suitability): High-stakes or subjective tasks where human judgment is the primary value. The AI advises with evidence, but the human remains firmly at the steering wheel.",
+        "raw": "Human-Led (Low ROI / Low Suitability): High-stakes or subjective tasks where human judgment is the primary value. The AI advises with evidence, but the human remains firmly at the steering wheel.",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Defer (Low ROI / High Suitability): Safe to automate, but the effort outweighs the gain. Keep these manual or use lightweight helpers until task frequency or AI proficiency shifts the ROI.",
+        "raw": "Defer (Low ROI / High Suitability): Safe to automate, but the effort outweighs the gain. Keep these manual or use lightweight helpers until task frequency or AI proficiency shifts the ROI.",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "List core workflows (10–30).Use verb+object: “schedule interviews,” “approve access,” “triage tickets.”",
+        "raw": "List core workflows (10–30).Use verb+object: “schedule interviews,” “approve access,” “triage tickets.”",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Mark commit points.Where does it become real: send/publish/grant/pay/write/delete?",
+        "raw": "Mark commit points.Where does it become real: send/publish/grant/pay/write/delete?",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Score each workflow on two scales (1–10).S_SUIT: reversibility + risk/blast radius + rules vs judgmentS_ROI: frequency + data readiness + AI performance",
+        "raw": "Score each workflow on two scales (1–10).S_SUIT: reversibility + risk/blast radius + rules vs judgmentS_ROI: frequency + data readiness + AI performance",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Plot on the matrix and assign a mode.Human-Led, Assist, Delegate, Defer",
+        "raw": "Plot on the matrix and assign a mode.Human-Led, Assist, Delegate, Defer",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Design by mode (use proven patterns).",
+        "raw": "Design by mode (use proven patterns).",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Gate autonomy with metrics.Track errors, reversals, exceptions, time saved, and review quality (avoid rubber-stamping).",
+        "raw": "Gate autonomy with metrics.Track errors, reversals, exceptions, time saved, and review quality (avoid rubber-stamping).",
+        "links": []
+      },
+      {
+        "tag": "figcaption",
+        "text": "The Three Control Modes",
+        "raw": "The Three Control Modes",
+        "links": []
+      },
+      {
+        "tag": "figcaption",
+        "text": "The Scoring Model Dimensions",
+        "raw": "The Scoring Model Dimensions",
+        "links": []
+      },
+      {
+        "tag": "figcaption",
+        "text": "Example application of the AI Delegation Matrix: interview scheduling scores high on suitability and ROI, making it a strong candidate for full AI delegation with human oversight.",
+        "raw": "Example application of the AI Delegation Matrix: interview scheduling scores high on suitability and ROI, making it a strong candidate for full AI delegation with human oversight.",
+        "links": []
+      },
+      {
+        "tag": "figcaption",
+        "text": "Most common software workflows plotted on the Delegation Matrix (Suitability × ROI), showing where tasks typically fall into Delegate, Assist, Human-Led, or Defer.",
+        "raw": "Most common software workflows plotted on the Delegation Matrix (Suitability × ROI), showing where tasks typically fall into Delegate, Assist, Human-Led, or Defer.",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          },
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "Taras Bakusevych",
+        "raw": "Taras Bakusevych",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://taras-bakusevych.medium.com/?source=post_page---byline--f4b97f9c4491---------------------------------------",
+            "text": "Taras Bakusevych",
+            "raw": "Taras Bakusevych"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "6 min read1 day ago",
+        "raw": "6 min read1 day ago",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "·",
+        "raw": "·",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          },
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fvote%2Fuser-experience-design-1%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&user=Taras+Bakusevych&userId=498aec590e1b&source=---header_actions--f4b97f9c4491---------------------clap_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://medium.com/m/signin?actionUrl=https%3A%2F%2Fmedium.com%2F_%2Fbookmark%2Fp%2Ff4b97f9c4491&operation=register&redirect=https%3A%2F%2Fuxdesign.cc%2Fthe-ai-delegation-matrix-what-parts-of-your-ui-shouldnt-exist-f4b97f9c4491&source=---header_actions--f4b97f9c4491---------------------bookmark_footer------------------",
+            "text": "",
+            "raw": ""
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "Press enter or click to view image in full size",
+        "raw": "Press enter or click to view image in full size",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "Press enter or click to view image in full size",
+        "raw": "Press enter or click to view image in full size",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "Press enter or click to view image in full size",
+        "raw": "Press enter or click to view image in full size",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "Press enter or click to view image in full size",
+        "raw": "Press enter or click to view image in full size",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "Press enter or click to view image in full size",
+        "raw": "Press enter or click to view image in full size",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "Press enter or click to view image in full size",
+        "raw": "Press enter or click to view image in full size",
+        "links": []
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "https://syntaxstream.substack.com/p/the-ai-delegation-matrix-what-parts",
+            "text": "Substack Syntax Stream",
+            "raw": "Substack Syntax Stream"
+          }
+        ]
+      }
+    ],
+    "warnings": []
+  }
+]

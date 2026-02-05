@@ -1,0 +1,259 @@
+[
+  {
+    "file": "sample1.html",
+    "status": "success",
+    "blocks": [
+      {
+        "tag": "p",
+        "text": "The market is volatile today",
+        "raw": "The market is volatile today",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Paragraph starts",
+        "raw": "Paragraph starts",
+        "links": []
+      },
+      {
+        "tag": "h1",
+        "text": "Breaking News",
+        "raw": "Breaking News",
+        "links": []
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "/details",
+            "text": "Read more",
+            "raw": "Read more"
+          }
+        ]
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "/contact",
+            "text": "Contact Us",
+            "raw": "Contact Us"
+          }
+        ]
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "file": "sample2.html",
+    "status": "success",
+    "blocks": [
+      {
+        "tag": "p",
+        "text": "This product is amazing.",
+        "raw": "This product is amazing.",
+        "links": []
+      },
+      {
+        "tag": "h2",
+        "text": "Our Product",
+        "raw": "Our Product",
+        "links": []
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "Buy.html",
+            "text": "Purchase",
+            "raw": "Purchase"
+          }
+        ]
+      },
+      {
+        "tag": "script:div",
+        "text": "Dynamic Content",
+        "raw": "Dynamic Content",
+        "links": [
+          {
+            "href": "dyn.html",
+            "text": "dyn",
+            "raw": "dyn"
+          }
+        ]
+      },
+      {
+        "tag": "script:p",
+        "text": "Oops",
+        "raw": "Oops",
+        "links": []
+      },
+      {
+        "tag": "script:a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "broken.html",
+            "text": "Broken Link",
+            "raw": "Broken Link"
+          }
+        ]
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "file": "sample3.html",
+    "status": "success",
+    "blocks": [
+      {
+        "tag": "p",
+        "text": "Price: € 12.50",
+        "raw": "Price: € 12.50",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "Special Offer: Crème Brûlée & Coffee",
+        "raw": "Special Offer: Crème Brûlée & Coffee",
+        "links": []
+      },
+      {
+        "tag": "h1",
+        "text": "Crème Brûlée — Café",
+        "raw": "CrÃ¨me BrÃ»lÃ©e â€” CafÃ©",
+        "links": []
+      },
+      {
+        "tag": "div",
+        "text": "\\x93Strange smart quotes\\x94 and invalid bytes: \\x81\\x8D\\x8F",
+        "raw": "\\x93Strange smart quotes\\x94 and invalid bytes: \\x81\\x8D\\x8F",
+        "links": []
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "/menu",
+            "text": "View Menu",
+            "raw": "View Menu"
+          }
+        ]
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "file": "sample4.html",
+    "status": "success",
+    "blocks": [
+      {
+        "tag": "p",
+        "text": "Main text block A.",
+        "raw": "Main text block A.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "More text here.",
+        "raw": "More text here.",
+        "links": [
+          {
+            "href": "a1.html",
+            "text": "link A",
+            "raw": "link A"
+          }
+        ]
+      },
+      {
+        "tag": "p",
+        "text": "Main text block B.",
+        "raw": "Main text block B.",
+        "links": []
+      },
+      {
+        "tag": "p",
+        "text": "More text here.",
+        "raw": "More text here.",
+        "links": [
+          {
+            "href": "a2.html",
+            "text": "link B",
+            "raw": "link B"
+          }
+        ]
+      }
+    ],
+    "warnings": []
+  },
+  {
+    "file": "sample5.html",
+    "status": "success",
+    "blocks": [
+      {
+        "tag": "p",
+        "text": "This is messy",
+        "raw": "This is messy <<<< /p>",
+        "links": []
+      },
+      {
+        "tag": "h1",
+        "text": "Welcome",
+        "raw": "Welcome",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Item 1",
+        "raw": "Item 1",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "Item 2",
+        "raw": "Item 2",
+        "links": []
+      },
+      {
+        "tag": "li",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "/item3",
+            "text": "Item 3 Link",
+            "raw": "Item 3 Link"
+          }
+        ]
+      },
+      {
+        "tag": "div",
+        "text": "Footer text starts here",
+        "raw": "Footer text starts here",
+        "links": []
+      },
+      {
+        "tag": "a",
+        "text": "",
+        "raw": "",
+        "links": [
+          {
+            "href": "/home",
+            "text": "Home",
+            "raw": "Home"
+          }
+        ]
+      }
+    ],
+    "warnings": []
+  }
+]
