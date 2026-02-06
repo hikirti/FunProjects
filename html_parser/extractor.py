@@ -4,6 +4,10 @@ Module 2: Rule-based Data Extractor.
 Extracts structured content blocks from HTML using metadata from the analyzer.
 Each block represents a logical unit (paragraph, heading, list item) with
 its text content and associated links.
+
+Pipeline position: Stage 3 of 3 (Preprocessor → Analyzer → Extractor).
+Input:  normalized HTML string + Metadata (selectors, encoding, hints)
+Output: ExtractionResult containing ContentBlock list + warnings
 """
 
 import re
@@ -15,18 +19,22 @@ from .logger import get_module_logger
 
 logger = get_module_logger("extractor")
 
-# Block-level elements that represent logical content units
+# Block-level elements that represent logical content units.
+# These define the granularity of extraction — each occurrence becomes one ContentBlock.
+# 'div' is included as a catch-all because many sites use <div> instead of semantic tags.
 BLOCK_TAGS = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'td', 'th',
               'blockquote', 'figcaption', 'dt', 'dd', 'caption', 'div']
 
-# Inline elements whose text should be included
+# Inline elements whose text is merged into the parent block's text.
+# We recurse into these but don't create separate blocks for them.
 INLINE_TAGS = ['span', 'strong', 'em', 'b', 'i', 'u', 'small', 'mark',
                'sub', 'sup', 'code', 'abbr', 'cite', 'q', 'time']
 
-# Link elements
+# Link elements — handled separately to produce Link objects with href + text
 LINK_TAGS = ['a', 'area']
 
-# Pattern to clean HTML-like garbage from text
+# Matches residual HTML-like fragments that sometimes survive parsing
+# (e.g. "<<<< /p>" or "< /div>").  Used by _clean_text() to scrub text output.
 HTML_GARBAGE_PATTERN = re.compile(r'<+\s*/?[\w]*\s*>?')
 
 
@@ -52,14 +60,20 @@ class Extractor:
 
     def _fix_encoding(self, text: str) -> str:
         """
-        Re-encode text with declared charset and decode as UTF-8.
+        Encoding repair round-trip: text → bytes (declared charset) → text (UTF-8).
 
-        If the HTML was declared as e.g. windows-1252 but the bytes were
-        decoded as UTF-8, the text will contain mojibake. This method
-        reverses that by re-encoding with the declared charset and
-        decoding as UTF-8.
+        Why this is needed:
+        Some HTML files declare charset=windows-1252 but BeautifulSoup decodes
+        the bytes as UTF-8 (its default).  When that happens, characters like
+        curly quotes (0x93/0x94 in windows-1252) become mojibake in the text.
+        By re-encoding with the *declared* charset we get the original bytes
+        back, then decoding those as UTF-8 gives us the correct characters.
 
-        Falls back to the original text if the round-trip fails.
+        The raw field preserves the mojibake ("browser truth"); this method
+        produces the corrected text for the text field.
+
+        Falls back to the original text if the round-trip fails (e.g. if the
+        declared charset is wrong or the text contains mixed encodings).
         """
         if not self._declared_charset or self._declared_charset.lower() in ('utf-8', 'utf8'):
             return text
@@ -83,6 +97,7 @@ class Extractor:
         Returns:
             ExtractionResult with content blocks
         """
+        # Store declared charset for use by _fix_encoding() during text extraction
         self._declared_charset = declared_charset
         warnings = []
         logger.info("Starting extraction")
@@ -93,18 +108,21 @@ class Extractor:
             logger.error(f"HTML parsing failed: {e}")
             return ExtractionResult(blocks=[], warnings=[f"Parse error: {e}"])
 
-        # Find main content elements
+        # --- Step 1: Locate main content containers using LLM-provided selectors ---
         main_elements = self._select_elements(soup, html, metadata.content_zones.main, warnings)
         if not main_elements:
+            # Fallback: use <body> so we still extract *something*
             warnings.append("No main content found, using body")
             main_elements = [soup.find('body')] if soup.find('body') else []
 
-        # Build exclusion set
+        # --- Step 2: Build the exclusion set (ads, nav, footer, hidden elements) ---
+        # We collect element IDs + all their descendants so excluded subtrees
+        # are fully skipped during block extraction.
         excluded = self._build_exclusion_set(soup, html, metadata.content_zones.exclude)
 
-        # Extract blocks from main content
+        # --- Step 3: Extract block-level content (paragraphs, headings, list items, etc.) ---
         blocks = []
-        processed = set()
+        processed = set()  # Track processed element IDs to avoid duplicate blocks
 
         for main_elem in main_elements:
             if main_elem is None:
@@ -112,14 +130,19 @@ class Extractor:
             for block in self._extract_blocks(main_elem, excluded, metadata, processed):
                 blocks.append(block)
 
-        # Extract standalone links (not inside block elements)
+        # --- Step 4: Extract standalone links ---
+        # Links that aren't inside any block-level element (e.g. bare <a> tags
+        # directly inside a <nav> or <div>) become their own ContentBlock.
         for main_elem in main_elements:
             if main_elem is None:
                 continue
             for block in self._extract_standalone_links(main_elem, excluded, metadata, processed):
                 blocks.append(block)
 
-        # Extract content from document.write() scripts
+        # --- Step 5: Extract content from document.write() scripts ---
+        # HTML recovered from inline document.write() calls by the Preprocessor.
+        # These blocks are tagged with a "script:" prefix (e.g. "script:p") so
+        # downstream consumers can distinguish them from regular DOM content.
         if script_content:
             for script_html in script_content:
                 script_blocks = self._extract_from_script_content(script_html, metadata)
@@ -169,9 +192,9 @@ class Extractor:
                          selectors: SelectorList, warnings: list) -> list:
         """Select elements using CSS and XPath selectors."""
         elements = []
-        seen = set()
+        seen = set()  # Deduplicate by Python object id
 
-        # CSS selectors
+        # CSS selectors — evaluated natively by BeautifulSoup
         for css in selectors.css:
             try:
                 for elem in soup.select(css):
@@ -182,7 +205,9 @@ class Extractor:
                 logger.warning(f"Invalid CSS '{css}': {e}")
                 warnings.append(f"Invalid CSS: {css}")
 
-        # XPath selectors
+        # XPath selectors — need lxml because BeautifulSoup doesn't support XPath.
+        # We parse the raw HTML into an lxml tree, run the XPath, then find the
+        # corresponding element in the BeautifulSoup tree via a heuristic match.
         for xpath in selectors.xpath:
             try:
                 tree = etree.HTML(html)
@@ -198,34 +223,48 @@ class Extractor:
         return elements
 
     def _find_matching_soup_element(self, lxml_elem, soup: BeautifulSoup):
-        """Find BeautifulSoup element matching an lxml element."""
+        """
+        XPath-to-BeautifulSoup bridge: find the BS4 element that corresponds
+        to an lxml element matched by XPath.
+
+        Heuristic matching strategy (most specific → least specific):
+        1. Match by id attribute (unique per page)
+        2. Match by tag + class (usually unique enough)
+        3. Fallback to first element with the same tag name
+        """
         tag = lxml_elem.tag
         attribs = dict(lxml_elem.attrib)
 
-        # Try by id first
+        # Try by id first — most reliable since ids should be unique
         if 'id' in attribs:
             found = soup.find(id=attribs['id'])
             if found:
                 return found
 
-        # Try by class
+        # Try by tag + class combination
         if 'class' in attribs:
             found = soup.find(tag, class_=attribs['class'])
             if found:
                 return found
 
-        # Fallback to first matching tag
+        # Last resort: first matching tag (may be wrong if many exist)
         candidates = soup.find_all(tag)
         return candidates[0] if candidates else None
 
     def _build_exclusion_set(self, soup: BeautifulSoup, html: str,
                              exclude_selectors: SelectorList) -> set:
-        """Build set of element IDs to exclude."""
+        """Build set of element IDs to exclude.
+
+        Includes both the matched elements AND all their descendants, so that
+        content nested inside an excluded container (e.g. links inside an ad div)
+        is also skipped.
+        """
         excluded = set()
         elements = self._select_elements(soup, html, exclude_selectors, [])
 
         for elem in elements:
             excluded.add(id(elem))
+            # Walk all descendants to exclude the entire subtree
             for desc in elem.descendants:
                 if hasattr(desc, 'name'):
                     excluded.add(id(desc))
@@ -255,11 +294,12 @@ class Extractor:
                 raw_text = self._get_text(elem, metadata.extraction_hints)
                 links = self._get_links(elem, excluded, metadata.extraction_hints)
 
-                # raw = browser truth (mojibake preserved)
-                # text = encoding-corrected + cleaned
+                # Dual-field encoding strategy:
+                #   raw_text = browser truth (mojibake preserved for debugging)
+                #   cleaned_text = encoding-corrected via _fix_encoding() + HTML garbage removed
                 cleaned_text = self._clean_text(self._fix_encoding(raw_text))
 
-                # Only add blocks with content
+                # Include the block if it has any usable content (text or links)
                 if cleaned_text or raw_text.strip() or links:
                     blocks.append(ContentBlock(
                         tag=tag,
@@ -337,6 +377,13 @@ class Extractor:
         """
         Extract links that aren't inside any block-level element.
         These become their own content blocks.
+
+        Why separate from _extract_blocks:
+        Links inside a <p> or <li> are collected as part of that block's .links list.
+        But bare <a> tags sitting directly in a <div> or <nav> (not wrapped in a
+        block element) would be missed by _extract_blocks.  This method catches
+        those "standalone" links and gives each one its own ContentBlock with
+        tag='a' and empty text (the link itself is the content).
         """
         blocks = []
 
@@ -344,7 +391,9 @@ class Extractor:
             if id(link_elem) in excluded or id(link_elem) in processed:
                 continue
 
-            # Check if link is inside a block element (container boundary first)
+            # Walk up from the link to the container boundary. If we encounter
+            # a block-level parent before reaching the container, this link is
+            # "inside a block" and was already extracted by _extract_blocks.
             inside_block = False
             for parent in link_elem.parents:
                 if parent == container:
@@ -389,8 +438,11 @@ class Extractor:
         """
         Extract content blocks from document.write() HTML.
 
-        These blocks are marked with tag prefix 'script:' to indicate
-        they came from JavaScript.
+        These blocks are marked with tag prefix 'script:' (e.g. 'script:p',
+        'script:a') so downstream consumers can distinguish DOM content from
+        JavaScript-injected content.  This is important because script-generated
+        content may be ads, tracking pixels, or legitimate article text —
+        the consumer decides how to handle it based on the prefix.
         """
         blocks = []
 

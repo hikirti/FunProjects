@@ -8,6 +8,10 @@ This module normalizes HTML before it's sent to the LLM analyzer:
 - Performs basic structural cleanup
 
 Design principle: NEVER FAIL on bad HTML. Always produce usable output.
+
+Pipeline position: Stage 1 of 3 (Preprocessor → Analyzer → Extractor).
+Input:  raw HTML string (possibly malformed, any encoding)
+Output: dict with normalized_html, original_html, sanitized_html, encoding info, warnings
 """
 
 import re
@@ -28,14 +32,20 @@ class Preprocessor:
     content structure for extraction.
     """
 
-    # Elements whose content should be removed but tag preserved for structure
+    # Elements whose content should be removed but tag preserved for structure.
+    # We keep the empty tags so the Analyzer can see where scripts/styles lived
+    # in the DOM (useful for detecting dynamic-content patterns).
     CONTENT_STRIP_ELEMENTS = ['script', 'style', 'noscript']
 
     # Elements that are purely non-content
     REMOVE_ELEMENTS = ['meta', 'link']
 
-    # WHATWG encoding spec: browsers remap these charsets.
+    # WHATWG encoding spec: browsers silently remap these charsets.
     # https://encoding.spec.whatwg.org/#names-and-labels
+    # For example, every browser treats "iso-8859-1" as "windows-1252" because
+    # the two are identical for 0x00–0x7F but windows-1252 defines characters
+    # in 0x80–0x9F that iso-8859-1 leaves as control codes.  We must match
+    # browser behavior so decoded text looks the same as what the user sees.
     WHATWG_CHARSET_MAP = {
         'iso-8859-1': 'windows-1252',
         'iso8859-1': 'windows-1252',
@@ -59,20 +69,24 @@ class Preprocessor:
 
         Returns the browser-equivalent charset or 'utf-8' as default.
         """
+        # Only scan the first 2KB — the HTML spec says charset declarations
+        # must appear within the first 1024 bytes; we use 2048 for safety.
         head = raw_bytes[:2048]
         try:
+            # Decode as ASCII with errors ignored — we only need to find the
+            # charset string, not faithfully decode the whole document.
             head_str = head.decode('ascii', errors='ignore')
         except Exception:
             return 'utf-8'
 
         charset = None
 
-        # <meta charset="...">
+        # Try the modern form first: <meta charset="...">
         m = re.search(r'<meta[^>]+charset=["\']?\s*([^\s"\';>]+)', head_str, re.IGNORECASE)
         if m:
             charset = m.group(1).strip().lower()
 
-        # <meta http-equiv="Content-Type" content="...; charset=...">
+        # Fall back to legacy: <meta http-equiv="Content-Type" content="...; charset=...">
         if not charset:
             m = re.search(
                 r'<meta[^>]+content=["\'][^"\']*charset=([^\s"\';>]+)',
@@ -84,7 +98,7 @@ class Preprocessor:
         if not charset:
             return 'utf-8'
 
-        # Apply WHATWG browser mapping
+        # Apply WHATWG browser mapping so we decode the same way browsers do
         return Preprocessor.WHATWG_CHARSET_MAP.get(charset, charset)
 
     def __init__(self, preserve_structure: bool = True):
@@ -113,61 +127,69 @@ class Preprocessor:
         warnings = []
         sanitized = html
 
-        # 1. Remove/replace invalid bytes (non-UTF8 compatible)
+        # --- Sanitization strategy ---
+        # These fixes run in a deliberate order: byte-level first, then structural.
+        # Each fix targets a specific class of real-world HTML breakage we've encountered.
+        # We always check-then-fix (search before sub) to avoid unnecessary string copies.
+
+        # 1. Replace invalid byte sequences with the Unicode replacement character.
+        # This prevents downstream parsers from choking on non-UTF-8 garbage bytes.
         try:
-            # Try to encode as UTF-8, replacing errors
             sanitized = sanitized.encode('utf-8', errors='replace').decode('utf-8')
         except Exception:
             pass
 
-        # 2. Remove NULL bytes
+        # 2. NULL bytes crash many parsers and are never valid in HTML text content.
         if '\x00' in sanitized:
             sanitized = sanitized.replace('\x00', '')
             warnings.append("Removed NULL bytes")
 
-        # 3. Fix double angle brackets: <<p>> -> <p>
+        # 3. Double angle brackets (e.g. <<p>>) appear in copy-paste corruption.
+        # Collapse them so the parser sees a normal tag.
         double_bracket_pattern = r'<{2,}(\/?[a-zA-Z][^>]*?)>{2,}'
         if re.search(double_bracket_pattern, sanitized):
             sanitized = re.sub(double_bracket_pattern, r'<\1>', sanitized)
             warnings.append("Fixed double angle brackets")
 
-        # 4. Fix stray angle brackets not part of tags: <<<< -> (removed)
-        # But preserve legitimate tags
+        # 4. Stray '<' not followed by a tag name — escape them to &lt; so they
+        # don't confuse the parser into seeing phantom tags.
         stray_brackets = r'<(?![a-zA-Z\/!])'
         if re.search(stray_brackets, sanitized):
             sanitized = re.sub(stray_brackets, '&lt;', sanitized)
             warnings.append("Escaped stray angle brackets")
 
-        # 5. Fix malformed attributes: href=="/path" -> href="/path"
+        # 5. Double-equals in attributes (href=="/path") is a common CMS bug.
+        # Reduce to single equals so the attribute value is parsed correctly.
         malformed_attr_pattern = r'(\w+)==(["\'])'
         if re.search(malformed_attr_pattern, sanitized):
             sanitized = re.sub(malformed_attr_pattern, r'\1=\2', sanitized)
             warnings.append("Fixed malformed attributes (double equals)")
 
-        # 6. Fix unclosed quotes in attributes (basic heuristic)
-        # Look for patterns like href="value followed by > without closing quote
-        # This is tricky, so we do a conservative fix
+        # 6. Unclosed attribute quotes — too risky to fix heuristically; skipped.
 
-        # 7. Remove orphan closing tags that appear before any content
-        # e.g., </span></footer></section> at weird places
+        # 7. Orphan closing tags (e.g. </span></footer> without matching openers).
+        # We detect but don't remove them — html5lib's tree builder handles
+        # rebalancing better than a regex can.
         orphan_pattern = r'</(?:span|div|p|footer|section|header|article|aside|nav)>\s*(?=</)'
         if re.search(orphan_pattern, sanitized, re.IGNORECASE):
-            # Don't remove, just note it - html5lib handles this
             pass
 
-        # 8. Normalize line endings
+        # 8. Normalize line endings to \n for consistent downstream processing.
         sanitized = sanitized.replace('\r\n', '\n').replace('\r', '\n')
 
-        # 9. Remove control characters (except newline, tab)
+        # 9. Strip control characters (except tab/newline/CR) that can cause
+        # invisible parsing failures or corrupt text output.
         control_chars = ''.join(
-            chr(c) for c in range(32) if c not in (9, 10, 13)  # tab, newline, carriage return
+            chr(c) for c in range(32) if c not in (9, 10, 13)
         )
         if any(c in sanitized for c in control_chars):
             sanitized = sanitized.translate(str.maketrans('', '', control_chars))
             warnings.append("Removed control characters")
 
-        # 10. Encoding artifacts are now preserved intentionally (mojibake = browser truth).
-        # Encoding correction happens in the extractor via _fix_encoding().
+        # 10. Encoding artifacts (mojibake) are intentionally preserved here.
+        # The raw text represents "browser truth".  Encoding correction happens
+        # later in the Extractor via _fix_encoding(), which uses the declared
+        # charset to attempt a proper round-trip.
 
         logger.debug(f"Sanitization complete. {len(warnings)} fixes applied.")
         return sanitized, warnings
@@ -198,8 +220,13 @@ class Preprocessor:
         sanitized_html, sanitize_warnings = self._sanitize_html(html)
         warnings.extend(sanitize_warnings)
 
+        # --- Parser fallback chain: html5lib → lxml → html.parser ---
+        # html5lib implements the full WHATWG parsing algorithm, so it handles
+        # the worst malformed HTML (unclosed tags, misnested elements, etc.).
+        # If it fails (rare — usually means a library bug), we fall back to lxml
+        # (fast, C-based, tolerant but not WHATWG-compliant), and finally to
+        # Python's built-in html.parser (least tolerant, but always available).
         try:
-            # Parse with html5lib for maximum tolerance of malformed HTML
             soup = BeautifulSoup(sanitized_html, 'html5lib')
 
             # Try to detect encoding from meta tags
@@ -217,7 +244,7 @@ class Preprocessor:
             except Exception as e2:
                 logger.warning(f"lxml parsing also failed: {e2}")
                 warnings.append(f"lxml parsing failed: {str(e2)}")
-                # Last resort: basic parser
+                # Last resort: built-in parser — always available, no C dependencies
                 soup = BeautifulSoup(sanitized_html, 'html.parser')
 
         # Remove comments
@@ -240,6 +267,11 @@ class Preprocessor:
         # Get normalized HTML string
         normalized_html = str(soup)
 
+        # Return multiple representations of the HTML so downstream stages can
+        # choose what they need:
+        #   normalized_html — for the Analyzer (LLM) to read structure
+        #   original_html   — untouched input (useful for debugging)
+        #   sanitized_html  — after string-level fixes but before DOM parsing
         return {
             "normalized_html": normalized_html,
             "detected_encoding": detected_encoding,
@@ -283,6 +315,11 @@ class Preprocessor:
         """
         Extract HTML content from document.write() calls.
 
+        Some pages inject visible content via document.write() in inline scripts.
+        If we just strip script tags, that content is lost.  This method recovers
+        the HTML strings passed to document.write() so the Extractor can process
+        them as additional content blocks (tagged with a "script:" prefix).
+
         Args:
             script_text: JavaScript code that may contain document.write()
 
@@ -291,8 +328,8 @@ class Preprocessor:
         """
         html_contents = []
 
-        # Pattern to match document.write("...") or document.write('...')
-        # Handles both single and double quotes
+        # Two patterns: one for double-quoted strings, one for single-quoted.
+        # Each handles escaped quotes inside the string (e.g. \").
         patterns = [
             r'document\.write\s*\(\s*"([^"\\]*(?:\\.[^"\\]*)*)"\s*\)',
             r"document\.write\s*\(\s*'([^'\\]*(?:\\.[^'\\]*)*)'\s*\)",
@@ -301,7 +338,7 @@ class Preprocessor:
         for pattern in patterns:
             matches = re.findall(pattern, script_text, re.IGNORECASE | re.DOTALL)
             for match in matches:
-                # Unescape JavaScript string escapes
+                # Unescape common JavaScript string escapes to recover the original HTML
                 html = match.replace(r'\"', '"').replace(r"\'", "'")
                 html = html.replace(r'\n', '\n').replace(r'\t', '\t')
                 if html.strip():
@@ -320,28 +357,29 @@ class Preprocessor:
         info = {
             'script_count': 0,
             'style_count': 0,
-            'script_srcs': [],
+            'script_srcs': [],              # External script URLs (for debugging/auditing)
             'inline_scripts_had_content': False,
-            'document_write_content': []  # HTML extracted from document.write()
+            'document_write_content': []    # HTML recovered from document.write() — fed to Extractor
         }
 
-        # Process script tags
+        # Process script tags — extract useful content before clearing.
+        # Order matters: we must grab document.write() HTML *before* calling .clear().
         for script in soup.find_all('script'):
             info['script_count'] += 1
 
-            # Track external script sources
+            # Track external script sources (useful for debugging dynamic pages)
             if script.get('src'):
                 info['script_srcs'].append(script.get('src'))
 
-            # Check if inline script had content and extract document.write()
+            # Inline scripts may contain document.write() with visible content
             if script.string and script.string.strip():
                 info['inline_scripts_had_content'] = True
-
-                # Extract HTML from document.write() calls
                 doc_write_html = self._extract_document_write_content(script.string)
                 info['document_write_content'].extend(doc_write_html)
 
-            # Clear content
+            # Clear the script body to keep the DOM clean for the Analyzer.
+            # If preserve_structure is True, the empty <script> tag remains as a
+            # structural hint; otherwise, remove the element entirely.
             script.clear()
 
             if not self.preserve_structure:

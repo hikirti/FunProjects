@@ -52,12 +52,20 @@ class MetadataCache:
         hashes the HTML structure.
         """
         if source_name:
-            # Use source name as key (sanitize for filesystem)
+            # Prefer source_name (e.g. filename) as the cache key because it's
+            # human-readable and makes the cache directory easy to audit/edit.
+            # Sanitize for filesystem safety: keep only alnum, dash, underscore, dot.
             safe_name = "".join(c if c.isalnum() or c in '-_.' else '_' for c in source_name)
             return safe_name.replace('.html', '').replace('.htm', '')
 
-        # Hash the HTML (first 10KB to avoid hashing huge files)
+        # No source name — hash the HTML content as a fallback key.
+        # Only hash the first 10KB: the structural selectors we care about are
+        # determined by the page's DOM skeleton, which is almost always in the
+        # first few KB.  Hashing the full (potentially multi-MB) document would
+        # be slow for no benefit, since two pages with different bodies but the
+        # same structure would still get the same selectors.
         html_sample = html[:10000]
+        # 12 hex chars (48 bits) is enough to avoid collisions in practice
         return hashlib.md5(html_sample.encode('utf-8', errors='replace')).hexdigest()[:12]
 
     def get(self, html: str, source_name: Optional[str] = None) -> Optional[Metadata]:
@@ -165,7 +173,8 @@ class MetadataCache:
         return entries
 
 
-# Default cache instance
+# Singleton default cache — shared across Analyzer instances to avoid creating
+# multiple watchers on the same directory.
 _default_cache: Optional[MetadataCache] = None
 
 

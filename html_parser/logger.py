@@ -25,7 +25,8 @@ def setup_logger(
     """
     logger = logging.getLogger(name)
 
-    # Avoid adding handlers multiple times
+    # Avoid adding handlers multiple times (setup_logger can be called repeatedly
+    # by different modules or when changing log level at runtime)
     if logger.handlers:
         return logger
 
@@ -53,13 +54,17 @@ def setup_logger(
     return logger
 
 
-# Default logger instance
+# Default logger instance — created once at import time
 logger = setup_logger()
 
 
 def get_module_logger(module_name: str) -> logging.Logger:
     """
     Get a child logger for a specific module.
+
+    Child loggers (e.g. "html_parser.analyzer") inherit the root logger's
+    handlers and level, but their name appears in log output so you can
+    tell which pipeline stage produced each message without extra config.
 
     Args:
         module_name: Name of the module (e.g., 'analyzer', 'extractor')

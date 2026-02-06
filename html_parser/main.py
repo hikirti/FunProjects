@@ -1,7 +1,9 @@
 """
 Main orchestrator for the HTML Parser framework.
 
-Coordinates the pipeline: Preprocessor → Analyzer → Extractor
+Coordinates the three-stage pipeline: Preprocessor → Analyzer → Extractor.
+This module wires the stages together and manages charset propagation so
+each stage uses the correct encoding information.
 """
 
 import json
@@ -66,21 +68,30 @@ class HTMLParser:
         logger.info("Starting pipeline")
 
         # Stage 1: Preprocess
+        # Input:  raw HTML string (any encoding, possibly malformed)
+        # Output: dict with normalized_html, original_html, encoding info, anomalies, warnings
         preprocessed = self.preprocessor.process(html, declared_charset=declared_charset)
 
-        # Stage 2: Analyze
+        # Stage 2: Analyze (LLM call, cached)
+        # Input:  preprocessed dict (uses normalized_html + anomalies)
+        # Output: Metadata (content zone selectors, encoding, extraction hints)
         metadata = self.analyzer.analyze(
             preprocessed,
             source_name=source_name,
             force_refresh=force_refresh
         )
 
-        # Stage 3: Extract
+        # Stage 3: Extract (rule-based, no LLM)
+        # Input:  normalized_html + Metadata + declared charset for encoding repair
+        # Output: ExtractionResult with ContentBlock list
+        # The declared charset flows from Preprocessor → Extractor so _fix_encoding()
+        # can attempt the correct encoding round-trip for mojibake repair.
         declared = preprocessed.get("declared_charset")
         result = self.extractor.extract(preprocessed["normalized_html"], metadata,
                                         declared_charset=declared)
 
-        # Add preprocessing warnings
+        # Merge preprocessing warnings into the final result so the caller
+        # sees all issues from every pipeline stage in one place.
         result.warnings.extend(preprocessed.get("warnings", []))
 
         logger.info(f"Complete: {len(result.blocks)} blocks")
@@ -94,10 +105,15 @@ class HTMLParser:
         """Parse an HTML file."""
         file_path = Path(file_path)
 
+        # Read as raw bytes so we can detect the charset from <meta> tags
+        # *before* decoding.  This ensures we decode with the charset the
+        # page actually declared (after WHATWG mapping), not just UTF-8.
         raw_bytes = file_path.read_bytes()
         declared_charset = Preprocessor.detect_charset_from_bytes(raw_bytes)
         html = raw_bytes.decode(declared_charset, errors='replace')
 
+        # Pass declared_charset through so the Extractor can use it for
+        # encoding repair in _fix_encoding().
         return self.parse(html, source_name=file_path.stem,
                          force_refresh=force_refresh,
                          declared_charset=declared_charset)

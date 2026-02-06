@@ -3,6 +3,13 @@
 CLI script to run the extractor module.
 
 Reads HTML files, uses cached metadata, and extracts content blocks.
+
+This is Step 2 of the two-step workflow:
+  Step 1: run_analyzer.py  → generates metadata via LLM, saves to cache
+  Step 2: run_extractor.py → uses cached metadata to extract content (no LLM)
+
+With --analyze (-a), this script can also run the Analyzer on-the-fly if no
+cached metadata exists, combining both steps into one (at the cost of an LLM call).
 """
 
 import argparse
@@ -30,6 +37,7 @@ def main():
     preprocessor = Preprocessor()
     extractor = Extractor()
     cache = MetadataCache()
+    # Only create an Analyzer (which needs an API key) if --analyze was requested
     analyzer = Analyzer(use_cache=True) if args.analyze else None
 
     results = []
@@ -39,16 +47,20 @@ def main():
         print(f"Extracting: {path.name}")
 
         try:
+            # Same byte-level charset detection as run_analyzer.py
             raw_bytes = path.read_bytes()
             declared_charset = Preprocessor.detect_charset_from_bytes(raw_bytes)
             html = raw_bytes.decode(declared_charset, errors='replace')
             preprocessed = preprocessor.process(html, declared_charset=declared_charset)
 
-            # Get metadata from cache
+            # --- Cache-first / fallback-to-analyzer logic ---
+            # Try to load metadata from the file cache (written by run_analyzer.py).
+            # Uses path.stem as key so it matches the source_name used during analysis.
             metadata = cache.get(html, source_name=path.stem)
 
             if metadata is None:
                 if analyzer:
+                    # No cache hit — run the Analyzer on-the-fly (requires API key)
                     print(f"  Analyzing (no cache)...")
                     metadata = analyzer.analyze(preprocessed, source_name=path.stem)
                 else:
@@ -60,9 +72,11 @@ def main():
                     })
                     continue
 
-            # Get document.write content from preprocessor
+            # Recover any HTML injected via document.write() — the Preprocessor
+            # extracted this during script tag processing.
             script_content = preprocessed.get("script_style_info", {}).get("document_write_content", [])
 
+            # Run extraction: apply selectors from metadata to the normalized HTML
             result = extractor.extract(preprocessed["normalized_html"], metadata, script_content,
                                        declared_charset=declared_charset)
 
@@ -73,7 +87,8 @@ def main():
                 "warnings": result.warnings
             })
 
-            # Count script-generated blocks
+            # Report document.write blocks separately so the user knows which
+            # content came from JavaScript vs. the static DOM.
             script_blocks = sum(1 for b in result.blocks if b.tag.startswith("script:"))
             if script_blocks:
                 print(f"  ✓ {len(result.blocks)} blocks ({script_blocks} from document.write)")
@@ -88,7 +103,7 @@ def main():
             })
             print(f"  ✗ Error: {e}")
 
-    # Output
+    # Output — ensure_ascii=False preserves unicode characters in the JSON
     output = json.dumps(results, indent=2, ensure_ascii=False)
 
     if args.output:

@@ -4,6 +4,11 @@ Test script for the HTML Parser framework.
 
 Tests preprocessor and extractor with predefined metadata.
 LLM-based analyzer test requires API key.
+
+Note: This file uses an older schema version (before the ContentBlock refactor)
+and may need updates to match the current schemas.  It serves as a smoke test
+to verify that the preprocessor processes sample files without crashing and
+that the extractor can produce output given hand-crafted metadata.
 """
 
 import json
@@ -19,7 +24,12 @@ from html_parser.schemas import Metadata, ContentZones, ExtractionHints
 
 
 def test_preprocessor():
-    """Test the preprocessor with all sample files."""
+    """
+    Validate that the Preprocessor handles all sample files without errors.
+
+    Checks: encoding detection, anomaly detection, script counting, and that
+    normalized HTML is produced for every file (i.e., the "never fail" contract).
+    """
     print("=" * 60)
     print("TESTING PREPROCESSOR")
     print("=" * 60)
@@ -41,12 +51,18 @@ def test_preprocessor():
 
 
 def test_extractor_with_predefined_metadata():
-    """Test extractor using predefined metadata (no LLM needed)."""
+    """
+    Test extractor using hand-crafted metadata (no LLM needed).
+
+    This validates that extraction works end-to-end by providing broad CSS
+    selectors that should match common page structures.  Useful for verifying
+    the extractor logic independently of the Analyzer's LLM output.
+    """
     print("\n" + "=" * 60)
     print("TESTING EXTRACTOR WITH PREDEFINED METADATA")
     print("=" * 60)
 
-    # Create generic metadata that works for most pages
+    # Generic metadata with broad selectors that work for most pages
     generic_metadata = Metadata(
         encoding="utf-8",
         content_zones=ContentZones(
@@ -87,14 +103,20 @@ def test_extractor_with_predefined_metadata():
             "result": result.model_dump()
         })
 
-    # Save results to file
+    # Persist results so they can be diffed across runs
     output_file = Path("test_output.json")
     output_file.write_text(json.dumps(all_results, indent=2))
     print(f"\n\nResults saved to {output_file}")
 
 
 def test_full_pipeline():
-    """Test full pipeline with LLM (requires API key)."""
+    """
+    End-to-end test: Preprocessor → Analyzer → Extractor.
+
+    Requires an API key (OPENAI_API_KEY or ANTHROPIC_API_KEY).  Verifies that
+    the full pipeline produces extraction results from a real LLM analysis.
+    Skipped gracefully if no API key is available.
+    """
     print("\n" + "=" * 60)
     print("TESTING FULL PIPELINE (requires API key)")
     print("=" * 60)

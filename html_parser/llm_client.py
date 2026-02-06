@@ -1,5 +1,9 @@
 """
 LLM Client with OpenAI/Anthropic provider switch.
+
+Uses the Factory pattern (LLMClient.create) to instantiate the right provider
+based on env vars or explicit argument.  Each provider implements BaseLLMClient
+so the Analyzer doesn't need to know which LLM is behind the call.
 """
 
 import os
@@ -68,7 +72,8 @@ class OpenAIClient(BaseLLMClient):
             )
         self.model = model
 
-        # Import here to avoid import errors if not using OpenAI
+        # Lazy import: only import the openai SDK when this provider is actually
+        # used.  This avoids ImportError when only Anthropic is installed.
         try:
             from openai import OpenAI
             self.client = OpenAI(api_key=self.api_key)
@@ -91,7 +96,9 @@ class OpenAIClient(BaseLLMClient):
             response = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                temperature=0.1  # Low temperature for consistent output
+                # Low temperature for deterministic structural analysis —
+                # we want consistent JSON schemas, not creative writing.
+                temperature=0.1
             )
             return response.choices[0].message.content
         except Exception as e:
@@ -152,7 +159,8 @@ class AnthropicClient(BaseLLMClient):
             )
         self.model = model
 
-        # Import here to avoid import errors if not using Anthropic
+        # Lazy import: same rationale as OpenAIClient — only require the
+        # anthropic SDK when this provider is selected.
         try:
             import anthropic
             self.client = anthropic.Anthropic(api_key=self.api_key)
@@ -186,14 +194,16 @@ class AnthropicClient(BaseLLMClient):
 
     def complete_json(self, prompt: str, system_prompt: Optional[str] = None) -> dict:
         """Send prompt to Anthropic and parse JSON response."""
-        # Add JSON instruction to prompt
+        # Anthropic doesn't have a native JSON response mode like OpenAI's
+        # response_format={"type": "json_object"}, so we add an explicit
+        # instruction to the prompt.
         json_prompt = f"{prompt}\n\nRespond with valid JSON only, no additional text."
 
         try:
             response_text = self.complete(json_prompt, system_prompt)
 
-            # Try to extract JSON from response
-            # Handle case where response might have markdown code blocks
+            # Anthropic models often wrap JSON in markdown code fences (```json ... ```).
+            # Strip those wrappers before parsing.
             text = response_text.strip()
             if text.startswith("```json"):
                 text = text[7:]
@@ -242,6 +252,7 @@ class LLMClient:
         Returns:
             Configured LLM client
         """
+        # Resolve provider: explicit arg > env var > default to OpenAI
         if provider is None:
             provider_str = os.getenv("LLM_PROVIDER", "openai").lower()
             try:
@@ -254,6 +265,8 @@ class LLMClient:
 
         logger.info(f"Creating LLM client for provider: {provider.value}")
 
+        # Dispatch to the appropriate concrete client.
+        # Each client handles its own API key resolution and SDK import.
         if provider == LLMProvider.OPENAI:
             kwargs = {"api_key": api_key}
             if model:

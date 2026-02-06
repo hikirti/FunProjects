@@ -5,6 +5,12 @@ Command-line script to run the Analyzer (Module 1) only.
 Preprocesses HTML and generates metadata using LLM.
 Saves metadata to cache for later use by extractor.
 
+Two-step workflow:
+  Step 1: Run this script to analyze HTML → produces cached metadata (LLM call).
+  Step 2: Run run_extractor.py to extract content using the cached metadata (no LLM).
+  This separation lets you review/edit metadata between steps and avoids
+  re-running the (slow, costly) LLM call during extraction iterations.
+
 Usage:
     python run_analyzer.py sample1.html
     python run_analyzer.py sample1.html sample2.html
@@ -17,7 +23,7 @@ import json
 import sys
 from pathlib import Path
 
-# Load .env file automatically
+# Load .env file automatically (for OPENAI_API_KEY, ANTHROPIC_API_KEY, LLM_PROVIDER)
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -63,7 +69,8 @@ def main():
     log_level = logging.DEBUG if args.verbose else logging.INFO
     setup_logger(level=log_level)
 
-    # Initialize components
+    # Initialize the two pipeline stages this script uses:
+    # Preprocessor (Stage 1) cleans up HTML, Analyzer (Stage 2) calls the LLM.
     preprocessor = Preprocessor()
     analyzer = Analyzer(use_cache=not args.no_cache)
 
@@ -74,15 +81,18 @@ def main():
         print(f"Analyzing: {file_path.name}", file=sys.stderr)
 
         try:
-            # Read HTML as bytes, detect charset, decode
+            # Read as raw bytes, detect charset from <meta> tags, then decode.
+            # This matches browser behavior (WHATWG charset mapping applied).
             raw_bytes = file_path.read_bytes()
             declared_charset = Preprocessor.detect_charset_from_bytes(raw_bytes)
             html = raw_bytes.decode(declared_charset, errors='replace')
 
-            # Preprocess
+            # Preprocess: sanitize HTML, normalize encoding, strip scripts/styles
             preprocessed = preprocessor.process(html, declared_charset=declared_charset)
 
-            # Analyze
+            # Analyze: send to LLM (or hit cache) to get content zone selectors.
+            # The result is automatically persisted to the file-based cache
+            # (metadata_cache/ directory) for later use by run_extractor.py.
             metadata = analyzer.analyze(
                 preprocessed,
                 source_name=file_path.name,
@@ -114,7 +124,7 @@ def main():
             })
             print(f"  ✗ Error: {e}", file=sys.stderr)
 
-    # Output results
+    # Output results as JSON (to file or stdout)
     output_json = json.dumps(results, indent=2)
 
     if args.output:
